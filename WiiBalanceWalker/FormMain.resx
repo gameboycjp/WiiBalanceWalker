@@ -120,12 +120,9 @@
   <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
-  <data name="checkBox_Send4LoadSensors.ToolTip" xml:space="preserve">
-    <value>Send each of the 4 load sensors of the Wii Balance board to the VJoy device, using Axis: Z, RX, RY, RZ.
-Note: these values are multiplied by 100 before being sent out to the vJoy interface. 
-(since joystick sliders use signed integers in the range of -32,768 to +32,767,
-and in this application all load sensors use floating-point variables, and display values in Kilograms)</value>
-  </data>
+  <metadata name="toolTip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
   <metadata name="backgroundWorker1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>114, 17</value>
   </metadata>

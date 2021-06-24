@@ -16,6 +16,7 @@ using System.Text.RegularExpressions;
 using System.Timers;
 using System.Windows.Forms;
 using WiimoteLib;
+using InputManager;
 
 namespace WiiBalanceWalker
 {
@@ -24,7 +25,6 @@ namespace WiiBalanceWalker
         System.Timers.Timer infoUpdateTimer = new System.Timers.Timer() { Interval = 50,     Enabled = false };
         System.Timers.Timer joyResetTimer   = new System.Timers.Timer() { Interval = 240000, Enabled = false };
 
-        ActionList actionList = new ActionList();
         Wiimote wiiDevice     = new Wiimote();
         DateTime jumpTime     = DateTime.UtcNow;
 
@@ -48,30 +48,15 @@ namespace WiiBalanceWalker
 
             infoUpdateTimer.Elapsed += new ElapsedEventHandler(infoUpdateTimer_Elapsed);
 
-            // Load trigger settings.
+            // Load screen size settings.
 
-            numericUpDown_TLR.Value  = Properties.Settings.Default.TriggerLeftRight;
-            numericUpDown_TFB.Value  = Properties.Settings.Default.TriggerForwardBackward;
-            numericUpDown_TMLR.Value = Properties.Settings.Default.TriggerModifierLeftRight;
-            numericUpDown_TMFB.Value = Properties.Settings.Default.TriggerModifierForwardBackward;
-
-            // Link up form controls with action settings.
-
-            actionList.Left          = new ActionItem("Left",          comboBox_AL,  numericUpDown_AL);
-            actionList.Right         = new ActionItem("Right",         comboBox_AR,  numericUpDown_AR);
-            actionList.Forward       = new ActionItem("Forward",       comboBox_AF,  numericUpDown_AF);
-            actionList.Backward      = new ActionItem("Backward",      comboBox_AB,  numericUpDown_AB);
-            actionList.Modifier      = new ActionItem("Modifier",      comboBox_AM,  numericUpDown_AM);
-            actionList.Jump          = new ActionItem("Jump",          comboBox_AJ,  numericUpDown_AJ);
-            actionList.DiagonalLeft  = new ActionItem("DiagonalLeft",  comboBox_ADL, numericUpDown_ADL);
-            actionList.DiagonalRight = new ActionItem("DiagonalRight", comboBox_ADR, numericUpDown_ADR);
+            numericScreenWidth.Value  = Properties.Settings.Default.ScreenWidth;
+            numericScreenHeight.Value = Properties.Settings.Default.ScreenHeight;
+            numericAreaWidth.Value    = Properties.Settings.Default.AreaWidth;
+            numericAreaHeight.Value   = Properties.Settings.Default.AreaHeight;
 
             // Load saved preference.
 
-            checkBox_SendCGtoXY.Checked = Properties.Settings.Default.SendCGtoXY;
-            checkBox_Send4LoadSensors.Checked = Properties.Settings.Default.Send4LoadSensors;
-            checkBox_ShowValuesInConsole.Checked = Properties.Settings.Default.ShowValuesInConsole;
-            checkBox_EnableJoystick.Checked = Properties.Settings.Default.EnableJoystick;
             checkBox_DisableActions.Checked = Properties.Settings.Default.DisableActions;
             checkBox_StartupAutoConnect.Checked = Properties.Settings.Default.EnableJoystick;
             checkBox_AutoTare.Checked = Properties.Settings.Default.EnableJoystick;
@@ -86,30 +71,6 @@ namespace WiiBalanceWalker
             {
                 this.WindowState = FormWindowState.Minimized;
             }
-        }
-
-        private void numericUpDown_TLR_ValueChanged(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.TriggerLeftRight = (int)numericUpDown_TLR.Value;
-            Properties.Settings.Default.Save();
-        }
-
-        private void numericUpDown_TFB_ValueChanged(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.TriggerForwardBackward = (int)numericUpDown_TFB.Value;
-            Properties.Settings.Default.Save();
-        }
-
-        private void numericUpDown_TMLR_ValueChanged(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.TriggerModifierLeftRight = (int)numericUpDown_TMLR.Value;
-            Properties.Settings.Default.Save();
-        }
-
-        private void numericUpDown_TMFB_ValueChanged(object sender, EventArgs e)
-        {
-            Properties.Settings.Default.TriggerModifierForwardBackward = (int)numericUpDown_TMFB.Value;
-            Properties.Settings.Default.Save();
         }
 
         private void button_SetCenterOffset_Click(object sender, EventArgs e)
@@ -361,137 +322,24 @@ namespace WiiBalanceWalker
             label_brDR.Text = brDR.ToString("0.0");
             label_brDF.Text = brDF.ToString("0.0");
 
-            // Convert sensor values into actions.
+            // Find the top-left of the cursor area, and use the balance ratio to get a position in pixels.
 
-            var sendLeft          = false;
-            var sendRight         = false;
-            var sendForward       = false;
-            var sendBackward      = false;
-            var sendModifier      = false;
-            var sendJump          = false;
-            var sendDiagonalLeft  = false;
-            var sendDiagonalRight = false;
+            int tlX = (int)((numericScreenWidth.Value - numericAreaWidth.Value) / 2);
+            int tlY = (int)((numericScreenHeight.Value - numericAreaHeight.Value) / 2);
 
-            if (brX < (float)(50 - numericUpDown_TLR.Value)) sendLeft     = true;
-            if (brX > (float)(50 + numericUpDown_TLR.Value)) sendRight    = true;
-            if (brY < (float)(50 - numericUpDown_TFB.Value)) sendForward  = true;
-            if (brY > (float)(50 + numericUpDown_TFB.Value)) sendBackward = true;
+            int pX = (int)(brX * (float)numericAreaWidth.Value / 100) + tlX;
+            int pY = (int)(brY * (float)numericAreaHeight.Value / 100) + tlY;
 
-            if      (brX < (float)(50 - numericUpDown_TMLR.Value)) sendModifier = true;
-            else if (brX > (float)(50 + numericUpDown_TMLR.Value)) sendModifier = true;
-            else if (brY < (float)(50 - numericUpDown_TMFB.Value)) sendModifier = true;
-            else if (brY > (float)(50 + numericUpDown_TMFB.Value)) sendModifier = true;
+            // Update status message.
 
-            // Detect jump but use a time limit to stop it being active while off the board.
+            label_Status.Text = pX.ToString() + ", " + pY.ToString();
 
-            if (owWeight < 1f)
-            {
-                if (DateTime.UtcNow.Subtract(jumpTime).Seconds < 2) sendJump = true;
-            }
-            else
-            {
-                jumpTime = DateTime.UtcNow;
-            }
-
-            // Check for diagonal pressure only when no other movement actions are active.
-
-            if (!sendLeft && !sendRight && !sendForward && !sendBackward && brDF > 15)
-            {
-                if (brDL > brDR) sendDiagonalLeft  = true;
-                else             sendDiagonalRight = true;
-            }
-
-            // Display actions.
-
-            label_Status.Text = "Result: ";
-
-            if (sendForward)       label_Status.Text += "Forward";
-            if (sendLeft)          label_Status.Text += "Left";
-            if (sendBackward)      label_Status.Text += "Backward";
-            if (sendRight)         label_Status.Text += "Right";
-            if (sendModifier)      label_Status.Text += " + Modifier";
-            if (sendJump)          label_Status.Text += "Jump";
-            if (sendDiagonalLeft)  label_Status.Text += "Diagonal Left";
-            if (sendDiagonalRight) label_Status.Text += "Diagonal Right";
-
-            if (checkBox_DisableActions.Checked) label_Status.Text += " ( DISABLED )";
-
-            // Send actions.
+            // Move the mouse.
 
             if (!checkBox_DisableActions.Checked)
             {
-                if (sendLeft)          actionList.Left.Start();          else actionList.Left.Stop();
-                if (sendRight)         actionList.Right.Start();         else actionList.Right.Stop();
-                if (sendForward)       actionList.Forward.Start();       else actionList.Forward.Stop();
-                if (sendBackward)      actionList.Backward.Start();      else actionList.Backward.Stop();
-                if (sendModifier)      actionList.Modifier.Start();      else actionList.Modifier.Stop();
-                if (sendJump)          actionList.Jump.Start();          else actionList.Jump.Stop();
-                if (sendDiagonalLeft)  actionList.DiagonalLeft.Start();  else actionList.DiagonalLeft.Stop();
-                if (sendDiagonalRight) actionList.DiagonalRight.Start(); else actionList.DiagonalRight.Stop();
+                Mouse.Move(pX, pY);
             }
-
-            // Update joystick emulator.
-
-            if (checkBox_EnableJoystick.Checked)
-            {
-                double joyX = 0, joyY = 0; 
-
-                // send X/Y position of the player's Center of Gravity through vJoy
-
-                if (checkBox_SendCGtoXY.Checked)
-                {
-                    //var cgF = wiiDevice.WiimoteState.BalanceBoardState.CenterOfGravity; // this is a nice function, but since I found out that wiimote library won't let me: 1.tare the balance board 2.compensate for temperature / latitude 3.has a bug with the kg values (each sensor is 4 times too big, but the overall weight is fine) then I'm not using it. It cannot give calibrated results.
-
-                    // Uses Int16 ( -32767 to +32767 ) where 0 is the center. Multiplied by 2 because realistic usage is between the 30-70% ratio.
-
-                    joyX = (brX * 655.34 + -32767.0) * 2.0;
-                    joyY = (brY * 655.34 + -32767.0) * 2.0;
-                    //Console.WriteLine("joyX {0} JoyY {1}",joyX, joyY);
-
-                    // Limit values to Int16, you cannot just (cast) or Convert.ToIn16() as the value '+ - sign' may invert.
-
-                    if (joyX < short.MinValue) joyX = short.MinValue;
-                    if (joyY < short.MinValue) joyY = short.MinValue;
-
-                    if (joyX > short.MaxValue) joyX = short.MaxValue;
-                    if (joyY > short.MaxValue) joyY = short.MaxValue;
-
-                    if (Double.IsNaN(joyX)) joyX = 0.0;         // send the dead center value if not enough weight is on the board
-                    if (Double.IsNaN(joyY)) joyY = 0.0;
-                }
-                
-                if (!checkBox_Send4LoadSensors.Checked)                
-                {
-                    rwTopLeft = 0; rwTopRight = 0; rwBottomLeft = 0; rwBottomRight = 0;
-                }
-                string values = string.Format("X:{0,6:#####}  Y:{1,6:#####}  Z:{2,6:###.##}  XR:{3,6:###.##}  YR:{4,6:###.##}  ZR:{5,6:###.##}", joyX, joyY, rwTopLeft, rwTopRight, rwBottomLeft, rwBottomRight);
-                
-                if (checkBox_ShowValuesInConsole.Checked)
-                {
-                    BalanceWalker.FormMain.consoleBoxWriteLine(values);
-                }
-                VJoyFeeder.Setjoystick((int)joyX, (int)joyY, (int)(rwTopLeft * 100), (int)(rwTopRight * 100), (int)(rwBottomLeft * 100), (int)(rwBottomRight * 100), aButton);
-            }
-        }
-
-        private void checkBox_EnableJoystick_CheckedChanged(object sender, EventArgs e)
-        {
-            var isChecked = ((CheckBox)sender).Checked;
-            Properties.Settings.Default.EnableJoystick = isChecked;
-            Properties.Settings.Default.Save();
-
-            bool status;
-            if (checkBox_EnableJoystick.Checked)
-            {
-                VJoyFeeder.Initialize((uint)VJoyIDUpDown.Value);
-                status = true;
-            }
-            else
-            { 
-                status = false;
-            }
-            checkBox_SendCGtoXY.Enabled = status;
-            checkBox_Send4LoadSensors.Enabled = status;
         }
 
         private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
@@ -500,17 +348,6 @@ namespace WiiBalanceWalker
 
             infoUpdateTimer.Enabled = false;
             wiiDevice.Disconnect();
-
-            // Prevent 'stuck' down keys from closing while doing an action.
-
-            actionList.Left.Stop();
-            actionList.Right.Stop();
-            actionList.Forward.Stop();
-            actionList.Backward.Stop();
-            actionList.Modifier.Stop();
-            actionList.Jump.Stop();
-            actionList.DiagonalLeft.Stop();
-            actionList.DiagonalRight.Stop();
         }
 
         private void zeroout_Click(object sender, EventArgs e)
@@ -541,18 +378,10 @@ namespace WiiBalanceWalker
             else
                 status = true;
 
-            label_ActionLeft.Enabled = status;
-            label_ActionRight.Enabled = status;
-            label_ActionForward.Enabled = status;
-            label_ActionBackward.Enabled = status;
-            label_ActionModifier.Enabled = status;
-            label_ActionJump.Enabled = status;
-            label_ActionDiagonalLeft.Enabled = status;
-            label_ActionDiagonalRight.Enabled = status;
-            label_TLR.Enabled = status;
-            label_TFB.Enabled = status;
-            label_TMLR.Enabled = status;
-            label_TMFB.Enabled = status;
+            label_ScreenWidth.Enabled = status;
+            label_ScreenHeight.Enabled = status;
+            label_AreaWidth.Enabled = status;
+            label_AreaHeight.Enabled = status;
         }
 
         private void ShowValues_CheckedChanged(object sender, EventArgs e)
@@ -594,6 +423,30 @@ namespace WiiBalanceWalker
         {
             var isChecked = ((CheckBox)sender).Checked;
             Properties.Settings.Default.StartMinimized = isChecked;
+            Properties.Settings.Default.Save();
+        }
+
+        private void numericScreenWidth_ValueChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.ScreenWidth = (int)numericScreenWidth.Value;
+            Properties.Settings.Default.Save();
+        }
+
+        private void numericScreenHeight_ValueChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.ScreenHeight = (int)numericScreenHeight.Value;
+            Properties.Settings.Default.Save();
+        }
+
+        private void numericAreaWidth_ValueChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.AreaWidth = (int)numericAreaWidth.Value;
+            Properties.Settings.Default.Save();
+        }
+
+        private void numericAreaHeight_ValueChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.AreaHeight = (int)numericAreaHeight.Value;
             Properties.Settings.Default.Save();
         }
     }

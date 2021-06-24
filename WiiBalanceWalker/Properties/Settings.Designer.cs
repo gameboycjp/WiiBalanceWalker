@@ -12,7 +12,7 @@ namespace WiiBalanceWalker.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.7.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "16.10.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -20,246 +20,6 @@ namespace WiiBalanceWalker.Properties {
         public static Settings Default {
             get {
                 return defaultInstance;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Key A")]
-        public string ActionLeft {
-            get {
-                return ((string)(this["ActionLeft"]));
-            }
-            set {
-                this["ActionLeft"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Key D")]
-        public string ActionRight {
-            get {
-                return ((string)(this["ActionRight"]));
-            }
-            set {
-                this["ActionRight"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Key W")]
-        public string ActionForward {
-            get {
-                return ((string)(this["ActionForward"]));
-            }
-            set {
-                this["ActionForward"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Key S")]
-        public string ActionBackward {
-            get {
-                return ((string)(this["ActionBackward"]));
-            }
-            set {
-                this["ActionBackward"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Key LShiftKey")]
-        public string ActionModifier {
-            get {
-                return ((string)(this["ActionModifier"]));
-            }
-            set {
-                this["ActionModifier"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Key Space")]
-        public string ActionJump {
-            get {
-                return ((string)(this["ActionJump"]));
-            }
-            set {
-                this["ActionJump"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Mouse Move X")]
-        public string ActionDiagonalLeft {
-            get {
-                return ((string)(this["ActionDiagonalLeft"]));
-            }
-            set {
-                this["ActionDiagonalLeft"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Mouse Move X")]
-        public string ActionDiagonalRight {
-            get {
-                return ((string)(this["ActionDiagonalRight"]));
-            }
-            set {
-                this["ActionDiagonalRight"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-15")]
-        public int AmountLeft {
-            get {
-                return ((int)(this["AmountLeft"]));
-            }
-            set {
-                this["AmountLeft"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("15")]
-        public int AmountRight {
-            get {
-                return ((int)(this["AmountRight"]));
-            }
-            set {
-                this["AmountRight"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-15")]
-        public int AmountForward {
-            get {
-                return ((int)(this["AmountForward"]));
-            }
-            set {
-                this["AmountForward"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("15")]
-        public int AmountBackward {
-            get {
-                return ((int)(this["AmountBackward"]));
-            }
-            set {
-                this["AmountBackward"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int AmountModifier {
-            get {
-                return ((int)(this["AmountModifier"]));
-            }
-            set {
-                this["AmountModifier"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int AmountJump {
-            get {
-                return ((int)(this["AmountJump"]));
-            }
-            set {
-                this["AmountJump"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("-15")]
-        public int AmountDiagonalLeft {
-            get {
-                return ((int)(this["AmountDiagonalLeft"]));
-            }
-            set {
-                this["AmountDiagonalLeft"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("15")]
-        public int AmountDiagonalRight {
-            get {
-                return ((int)(this["AmountDiagonalRight"]));
-            }
-            set {
-                this["AmountDiagonalRight"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("8")]
-        public int TriggerLeftRight {
-            get {
-                return ((int)(this["TriggerLeftRight"]));
-            }
-            set {
-                this["TriggerLeftRight"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("9")]
-        public int TriggerForwardBackward {
-            get {
-                return ((int)(this["TriggerForwardBackward"]));
-            }
-            set {
-                this["TriggerForwardBackward"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("15")]
-        public int TriggerModifierLeftRight {
-            get {
-                return ((int)(this["TriggerModifierLeftRight"]));
-            }
-            set {
-                this["TriggerModifierLeftRight"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("16")]
-        public int TriggerModifierForwardBackward {
-            get {
-                return ((int)(this["TriggerModifierForwardBackward"]));
-            }
-            set {
-                this["TriggerModifierForwardBackward"] = value;
             }
         }
         
@@ -356,6 +116,54 @@ namespace WiiBalanceWalker.Properties {
             }
             set {
                 this["StartMinimized"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1920")]
+        public int ScreenWidth {
+            get {
+                return ((int)(this["ScreenWidth"]));
+            }
+            set {
+                this["ScreenWidth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1080")]
+        public int ScreenHeight {
+            get {
+                return ((int)(this["ScreenHeight"]));
+            }
+            set {
+                this["ScreenHeight"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1920")]
+        public int AreaWidth {
+            get {
+                return ((int)(this["AreaWidth"]));
+            }
+            set {
+                this["AreaWidth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1080")]
+        public int AreaHeight {
+            get {
+                return ((int)(this["AreaHeight"]));
+            }
+            set {
+                this["AreaHeight"] = value;
             }
         }
     }
