@@ -1,4 +1,9 @@
-# WiiBalanceWalker v0.5 - by Shachar Liberman
+# WiiBalanceWalker v0.5 - by Shachar Liberman - modified by ewio
+
+# ewio's changes
+	o Removed actions system, replaced with absolute cursor movement
+	o Removed vJoy as it was not needed
+
 ## WiiBalanceWalker v0.4 and before - Released by Richard Perry from GreyCube.com - Under the Microsoft Public License.
  
 [Uses lshachar's WiimoteLib DLL  ](https://github.com/lshachar/WiimoteLib)<br/>
