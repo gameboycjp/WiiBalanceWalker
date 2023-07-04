@@ -1,4 +1,9 @@
-# WiiBalanceWalker v0.5 - by Shachar Liberman - modified by ewio
+# NeosBalance v1 - by gamethecupdog
+# Modification of WiiBalanceWalker v0.5 - by Shachar Liberman - modified by ewio
+
+# gamethecupdog's changes
+	o Removed absolute cursor movement, replaced with list of variables sent over websocket in text format
+	o Added CytraX Neos Websocket implementation, [CytraX.WS.cs](https://github.com/RaithSphere/NeosVR-Stuff/blob/main/HRM-Windows/HeartRate/CytraX.WS.cs)
 
 # ewio's changes
 	o Removed actions system, replaced with absolute cursor movement
@@ -25,3 +30,5 @@
 Get your compiled archive in the [Releases section](https://github.com/lshachar/Wiibalancewalker/releases)<br/>
 For virtual joystick support, [install vJoy by Shaul Eizikovich](http://vjoystick.sourceforge.net/site/index.php/download-a-install/download)<br/>
 Feel free to [put some bread in my jar](https://paypal.me/lshachar?locale.x=en_US), only if you feel like it!
+
+### CytraX.WS.cs is licensed under MIT, everything else is MS-PL
