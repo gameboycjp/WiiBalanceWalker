@@ -193,6 +193,7 @@
             this.label_rwTL.Size = new System.Drawing.Size(20, 13);
             this.label_rwTL.TabIndex = 0;
             this.label_rwTL.Text = "TL";
+            this.label_rwTL.Click += new System.EventHandler(this.label_rwTL_Click);
             // 
             // groupBox_OffsetWeight
             // 

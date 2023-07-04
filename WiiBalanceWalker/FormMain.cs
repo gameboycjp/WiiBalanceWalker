@@ -17,6 +17,8 @@ using System.Timers;
 using System.Windows.Forms;
 using WiimoteLib;
 using InputManager;
+using CytraX.WS;
+using System.Threading.Tasks;
 
 namespace WiiBalanceWalker
 {
@@ -36,9 +38,11 @@ namespace WiiBalanceWalker
         float oaTopRight    = 0f;
         float oaBottomLeft  = 0f;
         float oaBottomRight = 0f;
+        Task webSocketTask;
 
         public FormMain()
         {
+            webSocketTask = WebSocketComponent.Start(8123);
             InitializeComponent();
         }
 
@@ -209,11 +213,11 @@ namespace WiiBalanceWalker
             //var rwBottomRight = wiiDevice.WiimoteState.BalanceBoardState.SensorValuesRaw.BottomRight - wiiDevice.WiimoteState.BalanceBoardState.CalibrationInfo.Kg0.BottomRight;
 
             // Show the sensor values in kg.
-            label_rwWT.Text = rwWeight.ToString("0.0");
-            label_rwTL.Text = rwTopLeft.ToString("0.0");
-            label_rwTR.Text = rwTopRight.ToString("0.0");
-            label_rwBL.Text = rwBottomLeft.ToString("0.0");
-            label_rwBR.Text = rwBottomRight.ToString("0.0");
+            label_rwWT.Text = rwWeight.ToString("0.000");
+            label_rwTL.Text = rwTopLeft.ToString("0.000");
+            label_rwTR.Text = rwTopRight.ToString("0.000");
+            label_rwBL.Text = rwBottomLeft.ToString("0.000");
+            label_rwBR.Text = rwBottomRight.ToString("0.000");
 
             // Prevent negative values by tracking lowest possible value and making it a zero based offset.
 
@@ -285,32 +289,32 @@ namespace WiiBalanceWalker
                 owBottomRight = 0;
             }
             
-            label_owWT.Text = owWeight.ToString("0.0");
-            label_owTL.Text = owTopLeft.ToString("0.0")     + "\r\n" + oaTopLeft.ToString("0.0");
-            label_owTR.Text = owTopRight.ToString("0.0")    + "\r\n" + oaTopRight.ToString("0.0");
-            label_owBL.Text = owBottomLeft.ToString("0.0")  + "\r\n" + oaBottomLeft.ToString("0.0");
-            label_owBR.Text = owBottomRight.ToString("0.0") + "\r\n" + oaBottomRight.ToString("0.0");
+            label_owWT.Text = owWeight.ToString("0.000");
+            label_owTL.Text = owTopLeft.ToString("0.000");   // + "\r\n" + oaTopLeft.ToString("0.000");
+            label_owTR.Text = owTopRight.ToString("0.000"); // + "\r\n" + oaTopRight.ToString("0.000");
+            label_owBL.Text = owBottomLeft.ToString("0.000");// + "\r\n" + oaBottomLeft.ToString("0.000");
+            label_owBR.Text = owBottomRight.ToString("0.000");// + "\r\n" + oaBottomRight.ToString("0.000");
 
             // Calculate each weight ratio.
 
-            var owrPercentage  = 100 / (owTopLeft + owTopRight + owBottomLeft + owBottomRight);
-            var owrTopLeft     = owrPercentage * owTopLeft;
-            var owrTopRight    = owrPercentage * owTopRight;
-            var owrBottomLeft  = owrPercentage * owBottomLeft;
-            var owrBottomRight = owrPercentage * owBottomRight;
+            var owrPercentage  = 100 / (rwTopLeft + rwTopRight + rwBottomLeft + rwBottomRight);
+            var owrTopLeft     = owrPercentage * rwTopLeft;
+            var owrTopRight    = owrPercentage * rwTopRight;
+            var owrBottomLeft  = owrPercentage * rwBottomLeft;
+            var owrBottomRight = owrPercentage * rwBottomRight;
 
-            label_owrTL.Text = owrTopLeft.ToString("0.0");
-            label_owrTR.Text = owrTopRight.ToString("0.0");
-            label_owrBL.Text = owrBottomLeft.ToString("0.0");
-            label_owrBR.Text = owrBottomRight.ToString("0.0");
+            label_owrTL.Text = owrTopLeft.ToString("0.000");
+            label_owrTR.Text = owrTopRight.ToString("0.000");
+            label_owrBL.Text = owrBottomLeft.ToString("0.000");
+            label_owrBR.Text = owrBottomRight.ToString("0.000");
 
             // Calculate balance ratio.
 
             var brX = owrBottomRight + owrTopRight;
             var brY = owrBottomRight + owrBottomLeft;
 
-            label_brX.Text = brX.ToString("0.0");
-            label_brY.Text = brY.ToString("0.0");
+            label_brX.Text = brX.ToString("0.00");
+            label_brY.Text = brY.ToString("0.00");
 
             // Diagonal ratio used for turning on the spot.
 
@@ -318,9 +322,9 @@ namespace WiiBalanceWalker
             var brDR = owrPercentage * (owBottomRight + owTopLeft);
             var brDF = Math.Abs(brDL - brDR);
 
-            label_brDL.Text = brDL.ToString("0.0");
-            label_brDR.Text = brDR.ToString("0.0");
-            label_brDF.Text = brDF.ToString("0.0");
+            label_brDL.Text = brDL.ToString("0.00");
+            label_brDR.Text = brDR.ToString("0.00");
+            label_brDF.Text = brDF.ToString("0.00");
 
             // Find the top-left of the cursor area, and use the balance ratio to get a position in pixels.
 
@@ -334,11 +338,12 @@ namespace WiiBalanceWalker
 
             label_Status.Text = pX.ToString() + ", " + pY.ToString();
 
-            // Move the mouse.
+            // IMPORTANT NEOS STRING SHENANIGANS
 
             if (!checkBox_DisableActions.Checked)
             {
-                Mouse.Move(pX, pY);
+                string to_send = $"{rwWeight.ToString("0.000")}\n{rwTopLeft.ToString("0.000")}\n{rwTopRight.ToString("0.000")}\n{rwBottomLeft.ToString("0.000")}\n{rwBottomRight.ToString("0.000")}\n{owrTopLeft.ToString("0.000")}\n{owrTopRight.ToString("0.000")}\n{owrBottomLeft.ToString("0.000")}\n{owrBottomRight.ToString("0.000")}";
+                WebSocketComponent.SendMessage(to_send);
             }
         }
 
@@ -448,6 +453,11 @@ namespace WiiBalanceWalker
         {
             Properties.Settings.Default.AreaHeight = (int)numericAreaHeight.Value;
             Properties.Settings.Default.Save();
+        }
+
+        private void label_rwTL_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
