@@ -1,9 +1,9 @@
-# NeosBalance v1 - by gamethecupdog
+# KarIO.FitBoard v1 - by gamethecupdog
 # Modification of WiiBalanceWalker v0.5 - by Shachar Liberman - modified by ewio
 
 # gamethecupdog's changes
 	o Removed absolute cursor movement, replaced with list of variables sent over websocket in text format
-	o Added CytraX Neos Websocket implementation, [CytraX.WS.cs](https://github.com/RaithSphere/NeosVR-Stuff/blob/main/HRM-Windows/HeartRate/CytraX.WS.cs)
+	o Added CytraX Websocket implementation, [CytraX.WS.cs](https://github.com/RaithSphere/VR-Stuff/blob/main/HRM-Windows/HeartRate/CytraX.WS.cs)
 
 # ewio's changes
 	o Removed actions system, replaced with absolute cursor movement
