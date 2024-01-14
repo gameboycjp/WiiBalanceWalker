@@ -1,4 +1,4 @@
-﻿/// File from https://github.com/RaithSphere/NeosVR-Stuff/blob/main/HRM-Windows/HeartRate/CytraX.WS.cs
+﻿/// File from https://github.com/RaithSphere/VR-Stuff/blob/main/HRM-Windows/HeartRate/CytraX.WS.cs
 /// Made by RaithSphere, only modification was a namespace change
 
 using Ninja.WebSockets;

@@ -338,11 +338,30 @@ namespace WiiBalanceWalker
 
             label_Status.Text = pX.ToString() + ", " + pY.ToString();
 
-            // IMPORTANT NEOS STRING SHENANIGANS
+            // IMPORTANT RESONITE STRING SHENANIGANS
 
             if (!checkBox_DisableActions.Checked)
             {
-                string to_send = $"{rwWeight.ToString("0.000")}\n{rwTopLeft.ToString("0.000")}\n{rwTopRight.ToString("0.000")}\n{rwBottomLeft.ToString("0.000")}\n{rwBottomRight.ToString("0.000")}\n{owrTopLeft.ToString("0.000")}\n{owrTopRight.ToString("0.000")}\n{owrBottomLeft.ToString("0.000")}\n{owrBottomRight.ToString("0.000")}";
+                // Convert all variables to Hex
+                string rwTopLeftAsHex = BitConverter.ToUInt32(BitConverter.GetBytes(rwTopLeft), 0).ToString("X");
+                string rwTopRightAsHex = BitConverter.ToUInt32(BitConverter.GetBytes(rwTopRight), 0).ToString("X");
+                string rwBottomLeftAsHex = BitConverter.ToUInt32(BitConverter.GetBytes(rwBottomLeft), 0).ToString("X");
+                string rwBottomRightAsHex = BitConverter.ToUInt32(BitConverter.GetBytes(rwBottomRight), 0).ToString("X");
+                // And then sends them to Resonite
+                string to_send = $"{rwTopLeftAsHex}{rwTopRightAsHex}{rwBottomLeftAsHex}{rwBottomRightAsHex}";
+
+                /* All variables, some of which are discarded, and all using the old float string conversion.
+                {rwWeight.ToString("0.000")}
+                {rwTopLeft.ToString("0.000")}
+                {rwTopRight.ToString("0.000")}
+                {rwBottomLeft.ToString("0.000")}
+                {rwBottomRight.ToString("0.000")}
+                {owrTopLeft.ToString("0.000")}
+                {owrTopRight.ToString("0.000")}
+                {owrBottomLeft.ToString("0.000")}
+                {owrBottomRight.ToString("0.000")}
+                 */
+
                 WebSocketComponent.SendMessage(to_send);
             }
         }
